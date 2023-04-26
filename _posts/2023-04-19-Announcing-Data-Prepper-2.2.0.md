@@ -1,13 +1,14 @@
 ---
 layout: post
-title:  "Announcing Data Prepper 2.2.0"
+date: 2023-04-26T23:40:16.744Z
+title: Announcing Data Prepper 2.2.0
 authors:
-- dlv
-date: 2023-04-19 14:30:00 -0500
+  - dlv
 categories:
   - releases
 meta_keywords: Data Prepper 2.2.0
-meta_description: Data Prepper 2.2.0 improves data delivery assurances with end-to-end acknowledgments and an S3 DLQ.
+meta_description: Data Prepper 2.2.0 improves data delivery assurances with
+  end-to-end acknowledgments and an S3 DLQ.
 ---
 
 Data Prepper 2.2.0 is now available for [download](https://opensearch.org/downloads.html#data-prepper)!
