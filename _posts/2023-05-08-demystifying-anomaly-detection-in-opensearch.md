@@ -11,26 +11,82 @@ title: Demystifying Anomaly Detection in OpenSearch
 categories:
   - technical-post
 ---
+- - -
+
+date: 2023-05-05T21:42:27.337Z
+meta_description: An educational example of working with the anomaly detection
+  feature in OpenSearch.
+meta_keywords: opensearch, anomaly detection, open source
+feature_image: /assets/media/blog-images/demystifying-anomaly-detection-3-.png
+authors:
+
+* nateboot
+  layout: post
+  title: Demystifying Anomaly Detection in OpenSearch
+  categories:
+* technical-post
+
+- - -
+
 ### Anomaly Detection, what have you done for me lately?
 
 Anomaly detection is used in all aspects of our life. In fact, our brains are aptly hard wired to identify patterns in data, and anomalies in that data. It's something we do subconsciously and without any visible effort. Our only restraint? Our limited human memory. Using modern technology and an engine like OpenSearch, it may require a bit more effort, but what you get out of it is something with a much longer and reliable memory than a human. Especially yours truly. Follow along to get a quick example workflow using anomaly detection and to learn of the great advantages you get using the Anomaly Detection panel in OpenSearch. 
 
 ### What is an anomaly, and are you sure?
 
-You tell me. No, seriously. You might say it's anything we deem out of the ordinary of course, but defining "out of the ordinary" comes from being **familiar and cognizant** about the data we're examining. Similarly, part of configuring your anomaly detection model in OpenSearch comes from knowing what you're looking for. I'll share the details of the things we have to consider in a tick. 
+You might say it's anything we deem out of the ordinary.  Defining "out of the ordinary" comes from being **familiar and cognizant** about the data we're examining. Similarly, part of configuring your anomaly detection model in OpenSearch comes from knowing what you're looking for. I'll share the details of the things we have to consider in a tick. 
 
-Here's what I'm fixing to build: 
+Here's what I'm hoping we can build together!
+
+![anomaly detection workflow diagram](/assets/media/blog-images/demystifying-anomaly-detection-3-.png "anomaly detection workflow diagram")
+
+### Ingestion and Verification
+
+I'll be using Calyptia's [fluentbit ](https://fluentbit.io/)for ingesting data from [systemd](https://systemd.io) and putting it into an OpenSearch index. Here's the minimum configuration needed to make that happen. 
+
+```
+[INPUT]
+
+    # Use the input plugin 'systemd'
+    name systemd
+    # Give these entries a tag.
+    tag local.systemd.*
+    # I had problems when certain fields began with an underscore, so I had to make use of this. 
+    strip_underscores On
+    # Read the entirety of the file on start or just start tailing it.
+    read_from_tail On
 
 
-
-![anomaly detection workflow diagram](/assets/media/blog-images/demystifying-anomaly-detection-3-.png "workflow diagram")
-
-### Fluentbit ingesting like a champ as always.
-
-
+[OUTPUT]
+    # Use the output plugin 'opensearch'
+    name opensearch
+    # Enable tls
+    tls On
+    # If you're using a self-signed certificate, you'll want to turn off tls.verify
+    tls.verify Off
+    # We stopped using document types some time ago. 
+    suppress_type_name On
+    # Match input lines with tags starting with local.
+    match local.*
+    # I've got OpenSearch running on the same machine as fluent-bit. 
+    host localhost
+    # Ingesting on port 9200, the default. 
+    port 9200
+    # Deliver to the index named systemd
+    index systemd
+    # I beg your humble forgiveness for hard-coding credentials. 
+    http_user admin
+    http_passwd admin
+```
 
 ### Ensure you have data, then create a detector.
 
-Choose your features
+Once you've started fluent-bit (it's available for many Linux distributions, so please use the service manager appropriate for your environment) you can check to see if your data is making it to OpenSearch by using the 'discover' tab. 
 
-Choose your interval
+![opensearch discovery tab](/assets/media/blog-images/discover_tab.png "opensearch discovery tab")
+
+### Choose your anomaly detector features.
+
+I am of the opinion that calling it a feature is incorrect. They
+
+### Decide on a timeline.
