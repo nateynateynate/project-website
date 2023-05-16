@@ -74,8 +74,14 @@ I am of the opinion that calling it a feature is incorrect. You're just picking 
 
 ![anomaly detection features](/assets/media/blog-images/anomaly_detection_features.png "anomaly detection features")
 
-### Decide on a timeline.
+### Decide on a schedule.
 
 Anomaly detectors are not something that run constantly in your OpenSearch environment. You'll have to choose a **detector interval** and **delay.** It will then be a scheduled job, which will launch every **detector interval** minutes to analyze the last **detector interval** minutes worth of data to check for an anomaly. 
 
 Think of the **delay** as like an offset. Once the detector interval passes, the detector will wait another **delay** minutes, for the purposes of accommodating an ingestion pipeline that might have lag in it. This is a matter of accuracy - if your cluster is large, and there are many pieces in your ingestion pipeline, odds are that it will take a little bit more than ten minutes to receive exactly ten minutes worth of log entries. Accommodate for this pipeline induced latency with a **delay.**
+
+![anomaly detection window](/assets/media/blog-images/anomaly_detection_time_interval.png "anomaly detection window")
+
+
+
+### Categorical Fields
