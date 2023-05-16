@@ -11,10 +11,9 @@ title: Demystifying Anomaly Detection in OpenSearch
 categories:
   - technical-post
 ---
-
 ### Anomaly Detection, what have you done for me lately?
 
-Anomaly detection is used in all aspects of our life. In fact, our brains are aptly hard wired to identify patterns in data, and anomalies in that data. It's something we do subconsciously and without any visible effort. Our only restraint? Our limited human memory. Using modern technology and an engine like OpenSearch, it may require a bit more effort, but what you get out of it is something with a much longer and reliable memory than a human. Especially yours truly. Follow along to get a quick example workflow using anomaly detection and to learn of the great advantages you get using the Anomaly Detection panel in OpenSearch. 
+Anomaly detection is used in all aspects of our life. In fact, our brains are hard wired to identify patterns in data, and anomalies in that data. It's something we do subconsciously and without any visible effort. Our only restraint? Our limited human memory. Using modern technology and an engine like OpenSearch you get out it something with a much longer and reliable memory than a human. Especially yours truly. Follow along to get a quick example workflow using anomaly detection and to learn of the great advantages you get using the Anomaly Detection panel in OpenSearch. 
 
 ### What is an anomaly, and are you sure?
 
@@ -76,3 +75,7 @@ I am of the opinion that calling it a feature is incorrect. You're just picking 
 ![anomaly detection features](/assets/media/blog-images/anomaly_detection_features.png "anomaly detection features")
 
 ### Decide on a timeline.
+
+Anomaly detectors are not something that run constantly in your OpenSearch environment. You'll have to choose a **detector interval** and **delay.** It will then be a scheduled job, which will launch every **detector interval** minutes to analyze the last **detector interval** minutes worth of data to check for an anomaly. 
+
+Think of the **delay** as like an offset. Once the detector interval passes, the detector will wait another **delay** minutes, for the purposes of accommodating an ingestion pipeline that might have lag in it. This is a matter of accuracy - if your cluster is large, and there are many pieces in your ingestion pipeline, odds are that it will take a little bit more than ten minutes to receive exactly ten minutes worth of log entries. Accommodate for this pipeline induced latency with a **delay.**
