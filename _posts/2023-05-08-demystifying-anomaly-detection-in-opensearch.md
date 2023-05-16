@@ -81,12 +81,14 @@ I'll be using Calyptia's [fluentbit ](https://fluentbit.io/)for ingesting data f
 
 ### Ensure you have data, then create a detector.
 
-Once you've started fluent-bit (it's available for many Linux distributions, so please use the service manager appropriate for your environment) you can check to see if your data is making it to OpenSearch by using the 'discover' tab. 
+Once you've started fluent-bit (it's available for many Linux distributions, so please use the service manager or binary appropriate for your environs) you can check to see if your data is making it to OpenSearch by using the 'discover' tab. 
 
 ![opensearch discovery tab](/assets/media/blog-images/discover_tab.png "opensearch discovery tab")
 
 ### Choose your anomaly detector features.
 
-I am of the opinion that calling it a feature is incorrect. They
+I am of the opinion that calling it a feature is incorrect. You're just picking the indices that you want to check for anomalies. You can pick up to five. The anomaly detector will work off of an aggregation of each of your features, so for each of them you can choose between a few aggregation methods. 
+
+![anomaly detection features](/assets/media/blog-images/anomaly_detection_features.png "anomaly detection features")
 
 ### Decide on a timeline.
