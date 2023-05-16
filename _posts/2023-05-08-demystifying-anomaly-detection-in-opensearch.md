@@ -85,3 +85,9 @@ Think of the **delay** as like an offset. Once the detector interval passes, the
 
 
 ### Categorical Fields
+
+### Historical Analysis
+
+### Revisiting the Panel
+
+### Alerting
