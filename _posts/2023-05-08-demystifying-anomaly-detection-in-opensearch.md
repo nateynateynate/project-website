@@ -11,22 +11,6 @@ title: Demystifying Anomaly Detection in OpenSearch
 categories:
   - technical-post
 ---
-- - -
-
-date: 2023-05-05T21:42:27.337Z
-meta_description: An educational example of working with the anomaly detection
-  feature in OpenSearch.
-meta_keywords: opensearch, anomaly detection, open source
-feature_image: /assets/media/blog-images/demystifying-anomaly-detection-3-.png
-authors:
-
-* nateboot
-  layout: post
-  title: Demystifying Anomaly Detection in OpenSearch
-  categories:
-* technical-post
-
-- - -
 
 ### Anomaly Detection, what have you done for me lately?
 
