@@ -66,7 +66,9 @@ I'll be using Calyptia's [fluentbit ](https://fluentbit.io/)for ingesting data f
 
 Once you've started fluent-bit (it's available for many Linux distributions, so please use the service manager or binary appropriate for your environs) you can check to see if your data is making it to OpenSearch by using the 'discover' tab. 
 
-![opensearch discovery tab](/assets/media/blog-images/discover_tab.png "opensearch discovery tab")
+
+![opensearch discovery tab](/assets/media/blog-images/discover_tab.png "opensearch discovery tab"){: width="250" }
+
 
 ### Choose your anomaly detector features.
 
