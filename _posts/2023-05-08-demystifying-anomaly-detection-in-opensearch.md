@@ -66,9 +66,7 @@ I'll be using Calyptia's [fluentbit ](https://fluentbit.io/)for ingesting data f
 
 Once you've started fluent-bit (it's available for many Linux distributions, so please use the service manager or binary appropriate for your environs) you can check to see if your data is making it to OpenSearch by using the 'discover' tab. 
 
-
-![opensearch discovery tab](/assets/media/blog-images/discover_tab.png "opensearch discovery tab"){: width="250" }
-
+![opensearch discovery tab](/assets/media/blog-images/discover_tab.png "opensearch discovery tab"){: width="450" }
 
 ### Choose your anomaly detector features.
 
@@ -83,8 +81,6 @@ Anomaly detectors are not something that run constantly in your OpenSearch envir
 Think of the **delay** as like an offset. Once the detector interval passes, the detector will wait another **delay** minutes, for the purposes of accommodating an ingestion pipeline that might have lag in it. This is a matter of accuracy - if your cluster is large, and there are many pieces in your ingestion pipeline, odds are that it will take a little bit more than ten minutes to receive exactly ten minutes worth of log entries. Accommodate for this pipeline induced latency with a **delay.**
 
 ![anomaly detection window](/assets/media/blog-images/anomaly_detection_time_interval.png "anomaly detection window")
-
-
 
 ### Categorical Fields
 
