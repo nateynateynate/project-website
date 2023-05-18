@@ -86,7 +86,7 @@ Think of the **delay** as like an offset. Once the detector interval passes, the
 
 Practically, categorical fields provide you a grid heatmap of your anomalies, with each axis representing the two fields you've chosen. For my example, I'm really looking to organize my anomalies by the \`hostname\` and \`systemd_unit\`. This will show me a grid of anomalies organized by the hostname (as reported by systemd) as well as the unit (service). Here's what you can expect from the UI: 
 
-![anomaly detection categorical fields](/assets/media/blog-images/anomaly_detection_categorical_fields.png "categorical fields UI"){: width="450" }
+![anomaly detection categorical fields](/assets/media/blog-images/anomaly_detection_categorical_fields.png "categorical fields UI"){: width="550" }
 
 You can't change these after you create your detector. You should have a pretty good idea on how you want to categorize your anomalies before you make any permanent decisions. **Be familiar and cognizant** about your data beforehand. 
 
