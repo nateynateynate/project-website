@@ -70,7 +70,7 @@ Once you've started fluent-bit (it's available for many Linux distributions, so 
 
 ### Choose your anomaly detector features.
 
-I am of the opinion that calling it a feature is incorrect. You're just picking the indices that you want to check for anomalies. You can pick up to five. The anomaly detector will work off of an aggregation of each of your features, so for each of them you can choose between a few aggregation methods. 
+I am of the opinion that calling it a feature is incorrect. You're just picking the indices that you want to check for anomalies. You can pick up to five. The anomaly detector will work off of an aggregation of each of your features, so for each of them you can choose between a few aggregation methods. adfsfdsdfsfdsfdsa
 
 ![anomaly detection features](/assets/media/blog-images/anomaly_detection_features.png "anomaly detection features"){: width="450" }
 
