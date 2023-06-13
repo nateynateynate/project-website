@@ -17,7 +17,7 @@ Anomaly detection is used in all aspects of our life. In fact, our brains are ha
 
 ### What is an anomaly, and are you sure?
 
-You might say it's anything we deem out of the ordinary.  Defining "out of the ordinary" comes from being **familiar and cognizant** about the data we're examining. Similarly, part of configuring your anomaly detection model in OpenSearch comes from knowing what you're looking for. I'll share the details of the things we have to consider in a tick. 
+You might say it's anything we deem out of the ordinary.  Defining "out of the ordinary" comes from being **familiar and cognizant** about the data we're examining. Similarly, part of configuring your anomaly detection model in OpenSearch comes from knowing what you're looking for. 
 
 Here's what I'm hoping we can build together!
 
@@ -25,7 +25,7 @@ Here's what I'm hoping we can build together!
 
 ### Ingestion and Verification
 
-I'll be using Calyptia's [fluentbit ](https://fluentbit.io/)for ingesting data from [systemd](https://systemd.io) and putting it into an OpenSearch index. Here's the minimum configuration needed to make that happen. 
+I'll be using Calyptia's [fluentbit ](https://fluentbit.io/)for ingesting data from [systemd](https://systemd.io) and putting it into an OpenSearch index. Here's the minimum configuration needed to make that happen inside of `/etc/fluent-bit/fluent-bit.conf`
 
 ```
 [INPUT]
@@ -92,6 +92,10 @@ You can't change these after you create your detector. You should have a pretty 
 
 ### Historical Analysis
 
+The index you choose doesn't have to be fresh. In fact, if it contains documents that are in the past the anomaly detection will happily provide a historical analysis. It won't be available on the dashboard, but if you visit the page for your detector, you can click the tab for real-time analysis. 
+
 ### Revisiting the Panel
+
+
 
 ### Alerting
