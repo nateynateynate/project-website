@@ -150,6 +150,8 @@ DELETE /_plugins/_ml/tasks/`task_id`
 
 ----
 
+### Serendipity
+
 Something fortunate happened as I was trying to teach myself the API for ml-commons when following my tasks, models, and model groups side quest. I found an API call example
 [here](https://opensearch.org/docs/latest/ml-commons-plugin/api/) on the ml-commons api reference page. It was perfectly formed, and included all of the stuff that I was missing. Here it is: 
 
@@ -266,11 +268,14 @@ POST /_plugins/_ml/models/R-PAj4oBKue4OlrZ_QJ_/_load
 
 Success again. Now, the million dollar question. How do we take our own text and documents and have them vectorized when we ingest? 
 
+-----
+
+
 ## The Neural Search Plugin
 
-The [Neural Search Plugin](https://opensearch.org/docs/latest/search-plugins/neural-search/) is the solution. It will translate between vectors and text during ingestion and search time. As our goal is to ingest our own source of text and that's it, it looks like we're getting close to our goal. 
+The [Neural Search Plugin](https://opensearch.org/docs/latest/search-plugins/neural-search/) is the solution. It will translate between vectors and text during ingestion and search time. As our goal is to ingest our own source of text and that's it, it looks like we're getting close to our goal.
 
-Here's the call I used to create the pipeline. 
+First, we need to create a "Pipeline". Here's the call I used, pretty much straight out of the documentation. 
 
 ```json
 PUT _ingest/pipeline/i-eat-pieces-of-nlp-pipelines-for-breakfast
@@ -294,7 +299,7 @@ PUT _ingest/pipeline/i-eat-pieces-of-nlp-pipelines-for-breakfast
 }
 ```
 
-Now, the part I'm mostly familiar with. Ingested docs have to go into an actual index, so let's make one akin to the example given. 
+Now, the part I'm mostly familiar with. Ingested docs have to go into an actual index, so let's make one akin to the example given. Strangely enough, the default pipeline provided is not an ID, but the actual name of the pipeline. I hope you took good notes!
 
 ```json
 PUT /super-awesome-nlp-index
