@@ -20,7 +20,7 @@ Being able to ingest text, pass it through a language model for the embeddings, 
 
 # Machine learning? I need human learning.
 
-I apologize if my journey takes twists and turns. The effort involved has left me a little exhausted (from excitement, I promise!) and I'd sure like to help improve the journey from zero to something. What are the steps? Where do I start? I started [here](https://opensearch.org/docs/latest/ml-commons-plugin/ml-framework/) at the ml-framework documentation page. I apparently needed to register a model. Using an example call showed me that I needed to have a node as an "ML node" - I only have one node in my cluster. I decided to disable the requirement for now.
+I apologize if my journey takes twists and turns. The effort involved has left me a little overwhelmed (from excitement, I promise!) and I'd sure like to help improve the journey from zero to something. What are the steps? Where do I start? I started [here](https://opensearch.org/docs/latest/ml-commons-plugin/ml-framework/) at the ml-framework documentation page. I apparently needed to register a model. Using an example call showed me that I needed to have a node as an "ML node" - I only have one node in my cluster. I decided to disable the requirement for now.
 
 
 ---
@@ -28,7 +28,7 @@ I apologize if my journey takes twists and turns. The effort involved has left m
 
 ## Side Quest: The Settings API
 
-I started [here](https://opensearch.org/docs/latest/api-reference/cluster-api/cluster-settings/) at the cluster settings documentation, which got me the general syntax of the call. Now I just needed the setting names. I embarrassingly had to google "opensearch ml cluster settings" to find the actual setting names ([they're here](https://opensearch.org/docs/latest/ml-commons-plugin/cluster-settings/)). I eventually was able to cobble together this call.
+I started [here](https://opensearch.org/docs/latest/api-reference/cluster-api/cluster-settings/) at the cluster settings documentation, which got me the general syntax of the call. Now I just needed the setting names. I wasn't quite sure where to start my search for the names. I googled "opensearch ml cluster settings" to find the actual setting names ([they're here](https://opensearch.org/docs/latest/ml-commons-plugin/cluster-settings/)). I eventually was able to cobble together this call.
 
 ```json
 # I want to be able to register a model via url as well as perform ML tasks
@@ -45,7 +45,9 @@ PUT _cluster/settings
 
 ---
 
-That worked! Great. Now I can start, I hope. Let's upload a model!
+That worked! Great. Now I can try to upload my model again. 
+
+## Back to the Plot
 
 ```json
 POST /_plugins/_ml/models/_upload
@@ -61,40 +63,31 @@ POST /_plugins/_ml/models/_upload
   },
   "url": "https://github.com/opensearch-project/ml-commons/raw/2.x/ml-algorithms/src/test/resources/org/opensearch/ml/engine/algorithms/text_embedding/all-MiniLM-L6-v2_torchscript_sentence-transformer.zip?raw=true"
 }
-```
 
-The response was as expected - a new task id. 
-
-```json
+# The response is a new Task ID.
 {
   "task_id": "GeLGTIoBKue4OlrZmck7",
   "status": "CREATED"
 }
-```
 
-Let's see how the task is going.
-
-```json
+# Let's check the task.
 GET /_plugins/_ml/tasks/GeLGTIoBKue4OlrZmck7
 
-# The Response
 {
-    "task_type": "REGISTER_MODEL",
-    "function_name": "TEXT_EMBEDDING",
-    "state": "FAILED",
-    "worker_node": [
-      "_QJb--HRS2-7lfq5DCWMiQ"
-    ],
-    "create_time": 1693505198395,
-    "last_update_time": 1693505199947,
-    "error": "model content changed",
-    "is_async": true
+  "task_type": "REGISTER_MODEL",
+  "function_name": "TEXT_EMBEDDING",
+  "state": "FAILED",
+  "worker_node": [
+    "_QJb--HRS2-7lfq5DCWMiQ"
+  ],
+  "create_time": 1693505198395,
+  "last_update_time": 1693505199947,
+  "error": "model content changed",
+  "is_async": true
 }
 
-# Not exactly what I was hoping to see. 
-
+# Not exactly what I was hoping to see.
 ```
-
 Crap on a crap cracker. 
 
 ### Lesson Learned 1: Model Content Hash Value Field
@@ -150,7 +143,7 @@ DELETE /_plugins/_ml/tasks/`task_id`
 
 ----
 
-### Serendipity
+### Scene 1, Act 2, Pre-trained models
 
 Something fortunate happened as I was trying to teach myself the API for ml-commons when following my tasks, models, and model groups side quest. I found an API call example
 [here](https://opensearch.org/docs/latest/ml-commons-plugin/api/) on the ml-commons api reference page. It was perfectly formed, and included all of the stuff that I was missing. Here it is: 
@@ -191,7 +184,7 @@ Moving forward I think I'll stick with a pre-trained model. I'm going to delete 
 
 ---
 
-## Scene 1 Act 2: Create a Model Group and Register a Model
+## Scene 1 Act 3: Create a Model Group and Register a Model
 
 Let's try again. This time I want to create a model group for all of the models I upload to live under. Check this out: 
 
@@ -266,7 +259,7 @@ POST /_plugins/_ml/models/R-PAj4oBKue4OlrZ_QJ_/_load
 }
 ```
 
-Success again. Now, the million dollar question. How do we take our own text and documents and have them vectorized when we ingest? 
+Success again. Now, the goal related question. How do we ingest text and documents and have them vectorized automagically? 
 
 -----
 
@@ -299,7 +292,7 @@ PUT _ingest/pipeline/i-eat-pieces-of-nlp-pipelines-for-breakfast
 }
 ```
 
-Now, the part I'm mostly familiar with. Ingested docs have to go into an actual index, so let's make one akin to the example given. Strangely enough, the default pipeline provided is not an ID, but the actual name of the pipeline. I hope you took good notes!
+Ingested docs have to go into an actual index, so let's make one akin to the example given. Strangely enough, the default pipeline provided is not an ID, but the actual name of the pipeline. 
 
 ```json
 PUT /super-awesome-nlp-index
@@ -328,7 +321,7 @@ PUT /super-awesome-nlp-index
 }
 ```
 
-The response? 
+The response was a failure. I had done something wrong. 
 
 ```json
 {
@@ -350,7 +343,7 @@ The response?
 }
 ```
 
-Crap again. Fortunately, I was quick to receive a response on Slack about these calls. Once again, some assembly was required. 
+Fortunately, I was quick to receive a response on Slack about these calls. Once again, some assembly was required. 
 
 ---
 
