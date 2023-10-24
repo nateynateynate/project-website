@@ -88,6 +88,7 @@ GET /_plugins/_ml/tasks/GeLGTIoBKue4OlrZmck7
 
 # Not exactly what I was hoping to see.
 ```
+
 Crap on a crap cracker. 
 
 ### Lesson Learned 1: Model Content Hash Value Field
@@ -343,7 +344,7 @@ The response was a failure. I had done something wrong.
 }
 ```
 
-Fortunately, I was quick to receive a response on Slack about these calls. Once again, some assembly was required. 
+Fortunately, I was quick to receive a response on Slack about these calls. Some assembly was required that I had missed. 
 
 ---
 
@@ -430,7 +431,7 @@ POST /super-awesome-nlp-index/_doc
 }
 ```
 
-Looks like it ingested my joke. Just to see it with my own eyes I'm going to do a quick search and see if the vector comes back. I'll point out again that the "dimensionality" of our vector is 384, so there's going to be 384 values. I'm going to cut some of them out. 
+It looks like it ingested my joke. Just to see it with my own eyes I'm going to do a quick search and see if the vector comes back. I'll point out again that the "dimensionality" of our vector is 384, so there's going to be 384 values. I'm going to cut some of them out. 
 
 ```json
 {
@@ -471,6 +472,7 @@ Looks like it ingested my joke. Just to see it with my own eyes I'm going to do 
   }
 }
 ```
+
 This is where I stop. The goal has been achieved - a KNN index associated with a neural search pipeline and an ML model. Please stay tuned - I have no big plans for now, but where dad jokes are concerned, the sky is the limit. 
 
 
