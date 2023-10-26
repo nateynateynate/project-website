@@ -93,7 +93,7 @@ Crap on a crap cracker.
 
 ### Lesson Learned 1: Model Content Hash Value Field
 
-It clearly failed, but `model content changed` isn't very helpful of an error message. I was missing something. 
+My attempt to register a model clearly failed, but `model content changed` isn't very helpful of an error message. I was missing something. 
 
 ...*fast forward montage through hours of scanning through `MLModel.java` and pleading for help on our [public slack channel](...)*...
 
@@ -110,7 +110,7 @@ The lesson? Your API calls to register models via URL require some assembly. Thi
 
 ### Lesson Learned 2: Model Groups
 
-I had attempted to upload a model without passing in a model group id. OpenSearch does something for you when this happens. A model group is created for you, with the same name that you provided in your call. In my case, it was `all-MiniLM-L6-v2`. So, the next time I tried to upload that model, it kept telling me the name was taken by a particular model id, so I used the API to search for all of the models available. It wasn't there. What *was* there was a **model group** that I was able to delete. I used the API to delete all the tasks, models, and model groups I just made so I could start with a fresh slate. Make sure you follow the Tasks, Models and Model Groups side quest to make sure you can organize to your own level of comfort.
+I had attempted to upload a model without passing in a model group id. OpenSearch does something when this happens. A model group is created, with the same name that was provided in your call. In my case, it was `all-MiniLM-L6-v2`. So, the next time I tried to upload that model, it kept telling me the name was taken by a particular model id. I used the API to search for all of the models available. It wasn't there. What *was* there was a **model group** that I was able to delete. I used the API to delete all the tasks, models, and model groups I just made so I could start with a fresh slate. Make sure you follow the Tasks, Models and Model Groups side quest to make sure you can organize to your own level of comfort.
 
 The error message was confusing, so I filed [issue 1289](https://github.com/opensearch-project/ml-commons/issues/1289). I also decided to fix it on my own.
 
