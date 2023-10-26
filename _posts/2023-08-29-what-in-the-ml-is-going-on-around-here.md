@@ -407,7 +407,7 @@ PUT /super-awesome-nlp-index
 }
 ```
 
-Double rad! I made a KNN index attached to my neural search pipeline! NOW where was I? Oh right! I just want to ingest and vectorize some text, and that's it. I feel like I'm getting close. 
+Wonderful! I made a KNN index attached to my neural search pipeline! I just want to ingest and vectorize some text, and that's it. I feel like I'm getting close. 
 
 ```json
 POST /super-awesome-nlp-index/_doc
@@ -473,7 +473,8 @@ It looks like it ingested my joke. Just to see it with my own eyes I'm going to 
 }
 ```
 
-This is where I stop. The goal has been achieved - a KNN index associated with a neural search pipeline and an ML model. Please stay tuned - I have no big plans for now, but where dad jokes are concerned, the sky is the limit. 
+This is where I stop. The goal has been achieved - a KNN index associated with a neural search pipeline and an ML model. Please stay tuned - I have no big plans for now, but where really bad jokes are concerned, the sky is the limit.
+
 
 
 
