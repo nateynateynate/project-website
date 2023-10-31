@@ -89,8 +89,6 @@ GET /_plugins/_ml/tasks/GeLGTIoBKue4OlrZmck7
 # Not exactly what I was hoping to see.
 ```
 
-Crap on a crap cracker. 
-
 ### Lesson Learned 1: Model Content Hash Value Field
 
 My attempt to register a model clearly failed, but `model content changed` isn't very helpful of an error message. I was missing something. 
