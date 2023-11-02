@@ -14,21 +14,17 @@ twittercard:
   description: "From zero to vectorizing text with the neural search plugin. "
 ---
 
-Going from a freshly installed instance of OpenSearch to having vectorized text stored in a KNN enabled index seemed like a good learning exercise. On paper, it almost looked easy. Upload a model to a node designated as a ML node, load it, and start ingesting text and storing it as a vector. What resulted was way more of an adventure than I expected - I humbly beg of you all to learn from my toil. Please find below the chronicles of my efforts to load a pre-trained model into OpenSearch by hand, using nothing more than the dev console and a heavy dose of copypasta. I hope that it saves you the time spent researching that I needed.
+Going from a vanilla install of OpenSearch to having vectorized text stored in a k-NN--enabled index seemed like a quick learning exercise. On paper, it almost looked easy. Upload a model to a node designated as a ML node, load it, and start ingesting text and storing it as a vector. The amount of probing, asking, experimenting, and copying and pasting made it clear to me that I was mistaken. I humbly beg of you all to learn from my toil. The following blog chronicles my efforts in loading a pre-trained model into OpenSearch by hand, using nothing more than the dev console and a heavy dose of copypasta. I hope that it saves you the time spent researching that I needed.
 
-Being able to ingest text, pass it through a language model for the embeddings,  and then storing those embeddings will be the stopping point here. It's all I want.
+Being able to ingest text and store it as a vector will be the stopping point here. It was all I wanted.
 
 # Machine learning? I need human learning.
 
-I apologize if my journey takes twists and turns. The effort involved has left me a little overwhelmed (from excitement, I promise!) and I'd sure like to help improve the journey from zero to something. What are the steps? Where do I start? I started [here](https://opensearch.org/docs/latest/ml-commons-plugin/ml-framework/) at the ml-framework documentation page. I apparently needed to register a model. Using an example call showed me that I needed to have a node as an "ML node" - I only have one node in my cluster. I decided to disable the requirement for now.
+I apologize if my journey takes twists and turns. The effort involved has left me a little winded (from excitement, I promise!), and I'd sure like to help improve the journey from zero to something. What are the steps? Where do I start? I started [here](https://opensearch.org/docs/latest/ml-commons-plugin/ml-framework/) at the ml-framework documentation page. I apparently needed to register a model. Using an example call showed me that I needed to have a node as an "ML node"---I only have one node in my cluster. I decided to disable the requirement for now.
 
+### Side quest: The Settings API
 
----
-
-
-## Side Quest: The Settings API
-
-I started [here](https://opensearch.org/docs/latest/api-reference/cluster-api/cluster-settings/) at the cluster settings documentation, which got me the general syntax of the call. Now I just needed the setting names. I wasn't quite sure where to start my search for the names. I googled "opensearch ml cluster settings" to find the actual setting names ([they're here](https://opensearch.org/docs/latest/ml-commons-plugin/cluster-settings/)). I eventually was able to cobble together this call.
+I started [here](https://opensearch.org/docs/latest/api-reference/cluster-api/cluster-settings/) at the cluster settings documentation, which got me to the general syntax of the call. Now I just needed the setting names. I embarrassingly had to google "opensearch ml cluster settings" to find the actual setting names ([they're here] (https://opensearch.org/docs/latest/ml-commons-plugin/cluster-settings/)) in this OpenSearch cluster settings documentation. I eventually was able to cobble together this call.
 
 ```json
 # I want to be able to register a model via url as well as perform ML tasks
@@ -43,11 +39,7 @@ PUT _cluster/settings
 }
 ```
 
----
-
-That worked! Great. Now I can try to upload my model again. 
-
-## Back to the Plot
+That worked! Great. Now I can start, I hope. Let's upload a model!
 
 ```json
 POST /_plugins/_ml/models/_upload
@@ -63,16 +55,26 @@ POST /_plugins/_ml/models/_upload
   },
   "url": "https://github.com/opensearch-project/ml-commons/raw/2.x/ml-algorithms/src/test/resources/org/opensearch/ml/engine/algorithms/text_embedding/all-MiniLM-L6-v2_torchscript_sentence-transformer.zip?raw=true"
 }
+```
 
-# The response is a new Task ID.
+The response was as expected---a new task id. 
+
+```json
 {
   "task_id": "GeLGTIoBKue4OlrZmck7",
   "status": "CREATED"
 }
+```
 
-# Let's check the task.
+Let's see how the task is going.
+
+```json
 GET /_plugins/_ml/tasks/GeLGTIoBKue4OlrZmck7
+```
 
+The response was not quite what I expected.
+
+```json
 {
   "task_type": "REGISTER_MODEL",
   "function_name": "TEXT_EMBEDDING",
@@ -85,13 +87,13 @@ GET /_plugins/_ml/tasks/GeLGTIoBKue4OlrZmck7
   "error": "model content changed",
   "is_async": true
 }
-
-# Not exactly what I was hoping to see.
 ```
+
+Crap on a crap cracker. 
 
 ### Lesson Learned 1: Model Content Hash Value Field
 
-My attempt to register a model clearly failed, but `model content changed` isn't very helpful of an error message. I was missing something. 
+It clearly failed, but `model content changed` isn't very helpful of an error message. I was missing something. 
 
 ...*fast forward montage through hours of scanning through `MLModel.java` and pleading for help on our [public slack channel](...)*...
 
@@ -108,9 +110,9 @@ The lesson? Your API calls to register models via URL require some assembly. Thi
 
 ### Lesson Learned 2: Model Groups
 
-I had attempted to upload a model without passing in a model group id. OpenSearch does something when this happens. A model group is created, with the same name that was provided in your call. In my case, it was `all-MiniLM-L6-v2`. So, the next time I tried to upload that model, it kept telling me the name was taken by a particular model id. I used the API to search for all of the models available. It wasn't there. What *was* there was a **model group** that I was able to delete. I used the API to delete all the tasks, models, and model groups I just made so I could start with a fresh slate. Make sure you follow the Tasks, Models and Model Groups side quest to make sure you can organize to your own level of comfort.
+I had attempted to upload a model without passing in a model group id. OpenSearch does something for you when this happens. A model group is created for you, with the same name that you provided in your call. In my case, it was `all-MiniLM-L6-v2`. So, the next time I tried to upload that model, it kept telling me the name was taken by a particular model id, so I used the API to search for all of the models available. It wasn't there. What *was* there was a model group that I was able to delete. I used the API to delete all the tasks, models, and model groups I just made so I could start with a fresh slate. Make sure you follow the Tasks, Models and Model Groups side quest to make sure you can organize to your own level of comfort.
 
-The error message was confusing, so I filed [issue 1289](https://github.com/opensearch-project/ml-commons/issues/1289). I also decided to fix it on my own.
+The error message was confusing, so I filed [issue 1289](https://github.com/opensearch-project/ml-commons/issues/1289).
 
 
 ### Side Quest: Tasks, Models, and Model Groups
@@ -142,9 +144,7 @@ DELETE /_plugins/_ml/tasks/`task_id`
 
 ----
 
-### Scene 1, Act 2, Pre-trained models
-
-Something fortunate happened as I was trying to teach myself the API for ml-commons when following my tasks, models, and model groups side quest. I found an API call example
+Something serendipitous happened as I was trying to teach myself the API for ml-commons when following my tasks, models, and model groups side quest. I found an API call example
 [here](https://opensearch.org/docs/latest/ml-commons-plugin/api/) on the ml-commons api reference page. It was perfectly formed, and included all of the stuff that I was missing. Here it is: 
 
 ```json
@@ -166,7 +166,7 @@ POST /_plugins/_ml/models/_register
 }
 ```
 
-It still begged of me the question, "How do I know what values to put under model_config if I'm using some other model?" Then I came across *another* example call referring to something called a "Pretrained model" - look at this call: 
+It still raised the question, "How do I know what values to put under model_config if I'm using some other model?" Then I came across *another* example call referring to something called a "Pretrained model" - look at this call: 
 
 ```json
 POST /_plugins/_ml/models/_upload
@@ -183,7 +183,7 @@ Moving forward I think I'll stick with a pre-trained model. I'm going to delete 
 
 ---
 
-## Scene 1 Act 3: Create a Model Group and Register a Model
+## Scene 1 Act 2: Create a Model Group and Register a Model
 
 Let's try again. This time I want to create a model group for all of the models I upload to live under. Check this out: 
 
@@ -258,16 +258,12 @@ POST /_plugins/_ml/models/R-PAj4oBKue4OlrZ_QJ_/_load
 }
 ```
 
-Success again. Now, the goal related question. How do we ingest text and documents and have them vectorized automagically? 
-
------
-
+Success again. Now, the million dollar question. How do we take our own text and documents and have them vectorized when we ingest? 
 
 ## The Neural Search Plugin
 
-The [Neural Search Plugin](https://opensearch.org/docs/latest/search-plugins/neural-search/) is the solution. It will translate between vectors and text during ingestion and search time. As our goal is to ingest our own source of text and that's it, it looks like we're getting close to our goal.
+The [Neural Search Plugin](https://opensearch.org/docs/latest/search-plugins/neural-search/) is the solution. It will translate between vectors and text during ingestion and search time. As our goal is to ingest our own source of text and that's it, it looks like we're getting close to our goal. 
 
-First, we need to create a "Pipeline". Here's the call I used, pretty much straight out of the documentation. 
 
 ```json
 PUT _ingest/pipeline/i-eat-pieces-of-nlp-pipelines-for-breakfast
@@ -291,7 +287,7 @@ PUT _ingest/pipeline/i-eat-pieces-of-nlp-pipelines-for-breakfast
 }
 ```
 
-Ingested docs have to go into an actual index, so let's make one akin to the example given. Strangely enough, the default pipeline provided is not an ID, but the actual name of the pipeline. 
+Now, the part I'm mostly familiar with. Ingested docs have to go into an actual index, so let's make one akin to the example given. 
 
 ```json
 PUT /super-awesome-nlp-index
@@ -320,7 +316,7 @@ PUT /super-awesome-nlp-index
 }
 ```
 
-The response was a failure. I had done something wrong. 
+The response? 
 
 ```json
 {
@@ -342,9 +338,8 @@ The response was a failure. I had done something wrong.
 }
 ```
 
-Fortunately, I was quick to receive a response on Slack about these calls. Some assembly was required that I had missed. 
+Crap again. Fortunately, I was quick to receive a response on Slack about these calls. Once again, some assembly was required. 
 
----
 
 ## Side Quest 3: Creating a KNN index properly. 
 
@@ -364,16 +359,12 @@ According to the [pre-trained models](https://opensearch.org/docs/latest/ml-comm
 
 Now for the KNN `method`, I had a really hard time understanding what to put here. The only **required** field is the name. I'll take the defaults for the sake of simplicity in my examples. I'll try to boil down the docs into something a bit easier to skim. 
 
-* The engine is one of three. `nmslib`, `faiss` and `lucene`.
+* The engine is one of three: `nmslib`, `faiss`, and `lucene`.
 * The `nmslib` engine supports `hnsw`, which is the default if you supply a name but no engine. 
 * The `faiss` engine supports the methods `hnsw` and `ivf`. 
 * The `lucene` engine supports the method `hnsw`.
 
-I'm going to just specify a method name of `hnsw` which will provide the default engine of `nmslib`. Here's the call to create my KNN index now.
-
----
-
-
+I'm going to just specify a method name of `hnsw`, which will provide the default engine of `nmslib`. Here's the call to create my k-NN index now.
 ```json
 PUT /super-awesome-nlp-index
 {
@@ -405,7 +396,7 @@ PUT /super-awesome-nlp-index
 }
 ```
 
-Wonderful! I made a KNN index attached to my neural search pipeline! I just want to ingest and vectorize some text, and that's it. I feel like I'm getting close. 
+Double rad! I made a k-NN index attached to my neural search pipeline! NOW where was I? Oh right! I just want to ingest and vectorize some text, and that's it. I feel like I'm getting close. 
 
 ```json
 POST /super-awesome-nlp-index/_doc
@@ -429,7 +420,7 @@ POST /super-awesome-nlp-index/_doc
 }
 ```
 
-It looks like it ingested my joke. Just to see it with my own eyes I'm going to do a quick search and see if the vector comes back. I'll point out again that the "dimensionality" of our vector is 384, so there's going to be 384 values. I'm going to cut some of them out. 
+Looks like it ingested my joke. Just to see it with my own eyes I'm going to do a quick search and see if the vector comes back. I'll point out again that the "dimensionality" of our vector is 384, so there's going to be 384 values. I'm going to cut some of them out. 
 
 ```json
 {
@@ -470,9 +461,7 @@ It looks like it ingested my joke. Just to see it with my own eyes I'm going to 
   }
 }
 ```
-
-This is where I stop. The goal has been achieved - a KNN index associated with a neural search pipeline and an ML model. Please stay tuned - I have no big plans for now, but where really bad jokes are concerned, the sky is the limit.
-
+This is where I stop. The goal has been achieved---a k-NN index associated with a neural search pipeline and an ML model. Please stay tuned - I have no big plans for now, but where dad jokes are concerned, the sky is the limit. 
 
 
 
