@@ -1,5 +1,5 @@
 ---
-date: 2023-08-30 00:00:00 -0700
+date: 2023-11-02 00:00:00 -0700
 meta_description: Learn how to get started with the neural search plugin for OpenSearch to setup a k-NN index associated with a neural search pipeline and an ML model.
 meta_keywords: Neural search plugin, machine learning OpenSearch, get started with neural search, k-NN index
 has_math: false
