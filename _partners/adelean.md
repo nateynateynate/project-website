@@ -1,5 +1,5 @@
 ---
-name: Adelean
+name: Adeleana
 description: Adelean is a technology and systems consulting company. We guide
   you through setting up search engines and tools for data exploration and
   analysis. Integrators of search platforms like Lucene, Solr, Elasticsearch and
