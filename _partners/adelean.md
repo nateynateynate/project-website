@@ -5,7 +5,7 @@ description: Adelean is a technology and systems consulting company. We guide
   analysis. Integrators of search platforms like Lucene, Solr, Elasticsearch and
   OpenSearch, we bring our expertise for deploying and optimizing these
   technologies into your systems.
-name_long: Adelean
+name_long: Adeleana
 main_office_location: |
   Station F
   5, parvis Alan Turing
