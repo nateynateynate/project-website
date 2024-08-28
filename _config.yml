@@ -127,7 +127,7 @@ collections:
   faqs:
   testimonials:
   herobanners:
-    output: true    
+    output: false
   tutorials:
     output: true
   lines:
