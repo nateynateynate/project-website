@@ -3,7 +3,7 @@
 
 # OpenSearch.org website update
 
-The OpenSearch.org website is now hosted on infrastructure provided by the Linux Foundation. Unfortunately, we can no longer accept public contributions to the codebase in the form of a pull request.  A special thank you to the community for the years of insight and collaboration.  
+The OpenSearch.org website is now hosted on infrastructure provided by the Linux Foundation. Unfortunately, we can no longer accept contributions to the codebase in the form of a pull request.  A special thank you to the community for the years of insight and collaboration.  
 
 We continue to make use of the project-website repository for several things. Please take note: 
 
